@@ -7,7 +7,7 @@
 #include "LIS3DH.h"
 
 PRODUCT_ID(5435);
-PRODUCT_VERSION(5);
+PRODUCT_VERSION(6);
 
 SYSTEM_MODE(MANUAL);
 SYSTEM_THREAD(ENABLED);
@@ -18,8 +18,8 @@ SYSTEM_THREAD(ENABLED);
 
 LIS3DHSPI accel(SPI, A2, WKP);
 
-unsigned long PUBLISH_PERIOD = 15 * 60 * 1000;
-unsigned long ALARM_PERIOD = 1 * 60 * 1000;
+unsigned long PUBLISH_PERIOD = 30 * 60 * 1000;
+unsigned long ALARM_PERIOD = 2 * 60 * 1000;
 
 const unsigned long SERIAL_PERIOD = 5000;
 const unsigned long MAX_GPS_AGE_MS = 10000; // GPS location must be newer than this to be considered valid
