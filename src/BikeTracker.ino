@@ -7,7 +7,7 @@
 #include "LIS3DH.h"
 
 PRODUCT_ID(5435);
-PRODUCT_VERSION(4);
+PRODUCT_VERSION(5);
 
 SYSTEM_MODE(MANUAL);
 SYSTEM_THREAD(ENABLED);
@@ -123,7 +123,7 @@ void process() {
 
 int pubJson() {
   if (gps.location.isValid() && gps.location.age() < MAX_GPS_AGE_MS) {
-    StaticJsonBuffer<500> jsonBuffer;
+    StaticJsonBuffer<700> jsonBuffer;
     JsonObject& root = jsonBuffer.createObject();
 
     char lat[30];
@@ -149,6 +149,18 @@ int pubJson() {
     root["fc"] = fuel.getSoC();
     root["pi"] = positionInterrupt;
 
+		root["sp"] = gps.speed.kmph();
+		root["co"] = gps.course.deg();
+
+		if(gps.satellites.isValid()) {
+			root["sa"] = gps.satellites.value();
+			root["saa"] = gps.satellites.age();
+		}
+
+		if(gps.hdop.isValid()) {
+			root["hd"] = gps.hdop.value();
+			root["hda"] = gps.hdop.age();
+		}
 
     time_t time = Time.now();
     String ts = Time.format(time, "%Y-%m-%dT%H:%M:%S.000Z");
@@ -156,7 +168,7 @@ int pubJson() {
     sprintf(tsBuff, "%s", (const char*) ts);
     root["ts"] = tsBuff;
 
-    char jsonChar[500];
+    char jsonChar[700];
     root.printTo(jsonChar, sizeof(jsonChar));
     Particle.publish("JG", jsonChar, 300, PRIVATE);
     return 1;
